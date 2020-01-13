@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.horizonevent.project.models.ERole;
-import com.horizonevent.project.models.Role;
-import com.horizonevent.project.models.User;
+import com.horizonevent.project.models.user.ERole;
+import com.horizonevent.project.models.user.Role;
+import com.horizonevent.project.models.user.User;
 import com.horizonevent.project.payload.request.LoginRequest;
 import com.horizonevent.project.payload.request.SignupRequest;
 import com.horizonevent.project.payload.response.JwtResponse;

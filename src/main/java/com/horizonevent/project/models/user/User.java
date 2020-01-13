@@ -1,4 +1,4 @@
-package com.horizonevent.project.models;
+package com.horizonevent.project.models.user;
 
 import java.util.HashSet;
 import java.util.Set;
