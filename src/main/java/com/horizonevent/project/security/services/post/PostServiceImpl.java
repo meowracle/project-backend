@@ -3,9 +3,11 @@ package com.horizonevent.project.security.services.post;
 import com.horizonevent.project.models.Post;
 import com.horizonevent.project.repository.post.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
