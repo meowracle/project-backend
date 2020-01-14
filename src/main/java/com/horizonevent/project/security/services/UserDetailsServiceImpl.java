@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.horizonevent.project.models.User;
+import com.horizonevent.project.models.user.User;
 import com.horizonevent.project.repository.UserRepository;
 
 @Service

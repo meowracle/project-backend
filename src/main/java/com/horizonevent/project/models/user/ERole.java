@@ -1,4 +1,4 @@
-package com.horizonevent.project.models;
+package com.horizonevent.project.models.user;
 
 public enum ERole {
 	ROLE_USER,
