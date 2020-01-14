@@ -4,6 +4,7 @@ import com.horizonevent.project.models.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -19,24 +20,22 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotBlank
-    @Size(max = 120)
+    @Size(max = 120, min = 6)
     private String title;
 
-    @NotBlank
+    @Size(min = 6)
     private String content;
 
-    @NotBlank
+    @NotNull
     private Date date;
 
-    @NotBlank
+    @NotNull
     private Boolean shareStatus;
 
     public Post() {
     }
 
-    public Post(Long id, User user, String title, String content, Date date, Boolean shareStatus) {
-        this.id = id;
+    public Post(User user, String title, String content, Date date, Boolean shareStatus) {
         this.user = user;
         this.title = title;
         this.content = content;

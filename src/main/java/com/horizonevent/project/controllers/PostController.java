@@ -32,8 +32,11 @@ public class PostController {
     //Create a new post
     @PostMapping("/create-post")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Void> createPost (@RequestBody Post post, UriComponentsBuilder ucBuilder) {
-        postService.save(post);
+    public ResponseEntity<Void> createPost(@RequestBody Post post, UriComponentsBuilder ucBuilder) {
+        long millis = System.currentTimeMillis();
+        java.util.Date date = new java.util.Date(millis);
+        Post post1 = new Post(post.getUser(), post.getTitle(), post.getContent(), date, post.getShareStatus());
+        postService.save(post1);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/posts/{id}").buildAndExpand(post.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
