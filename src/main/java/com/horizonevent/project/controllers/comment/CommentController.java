@@ -3,12 +3,11 @@ package com.horizonevent.project.controllers.comment;
 import com.horizonevent.project.models.Comment;
 import com.horizonevent.project.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -24,6 +23,14 @@ public class CommentController {
             return new ResponseEntity<List<Comment>>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/api/comments", method = RequestMethod.POST)
+    public ResponseEntity<Void> createComment(@RequestBody Comment comment, UriComponentsBuilder uriComponentsBuilder){
+        System.out.println("Creating Comments" + comment.getDescription());
+        commentService.save(comment);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(uriComponentsBuilder.path("/comments/{id}").buildAndExpand(comment.getId()).toUri());
+        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 }
 
