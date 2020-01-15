@@ -17,7 +17,7 @@ import java.util.List;
 public class CommentController {
     @Autowired
     private CommentService commentService;
-    @RequestMapping(value = "/comments", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/comments", method = RequestMethod.GET)
     public ResponseEntity<List<Comment>> listComments(){
         List<Comment> comments = (List<Comment>) commentService.findAll();
         if (comments.isEmpty()){
