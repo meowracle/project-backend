@@ -5,6 +5,7 @@ import com.horizonevent.project.security.services.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,18 @@ public class PostController {
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
+    //Receive a single post
+    @GetMapping(value = "/posts/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Post> getPost(@PathVariable("id") long id) {
+        Post post = postService.findById(id);
+        if (post == null) {
+            System.out.println("Post with id " + id + " not found");
+            return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Post>(post, HttpStatus.OK);
+    }
+
+
     //Create a new post
     @PostMapping("/create-post")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -40,6 +53,38 @@ public class PostController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/posts/{id}").buildAndExpand(post.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    }
+
+    //Update Post
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<Post> updatePost(@PathVariable("id") long id, @RequestBody Post post) {
+        Post currentPost = postService.findById(id);
+
+        if(currentPost == null) {
+            System.out.println("Post with id " + id + " not fount");
+            return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
+        }
+
+        currentPost.setTitle(post.getTitle());
+        currentPost.setContent(post.getContent());
+        currentPost.setDate(post.getDate());
+        currentPost.setShareStatus(post.getShareStatus());
+
+        postService.save(currentPost);
+        return new ResponseEntity<Post>(currentPost, HttpStatus.OK);
+    }
+
+    //Delete a Post
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<Post> deletePost(@PathVariable("id") long id) {
+        Post post = postService.findById(id);
+        if (post == null) {
+            System.out.println("Unable to delete. Post id " + id + " not fount");
+            return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
+        }
+
+        postService.remove(id);
+        return new ResponseEntity<Post>(HttpStatus.NO_CONTENT);
     }
 
 }
