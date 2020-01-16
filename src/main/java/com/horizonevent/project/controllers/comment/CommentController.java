@@ -28,7 +28,6 @@ public class CommentController {
         }
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
     }
-
     @RequestMapping(value = "/api/comments", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> createComment(@RequestBody Comment comment, UriComponentsBuilder uriComponentsBuilder) {
@@ -38,7 +37,7 @@ public class CommentController {
         headers.setLocation(uriComponentsBuilder.path("/comments/{id}").buildAndExpand(comment.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Comment>> getComments(@PathVariable("id") long id) {
         Optional<Comment> comment = commentService.findById(id);
@@ -48,7 +47,7 @@ public class CommentController {
         }
         return new ResponseEntity<Optional<Comment>>(comment, HttpStatus.OK);
     }
-
+   // @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Comment> deleteComment(@PathVariable("id") long id) {
         System.out.println("Fetching & delete Comments with id" + id);
@@ -59,6 +58,19 @@ public class CommentController {
         }
         commentService.remove(id);
         return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Optional<Comment>> updateComment(@PathVariable("id") long id, @RequestBody Comment comment){
+        System.out.println("updating Comment " +id);
+        Optional<Comment> currentComment = commentService.findById(id);
+        if( currentComment == null) {
+            System.out.println("Comment with id" + id + "not found");
+            return new ResponseEntity<Optional<Comment>>(HttpStatus.NOT_FOUND);
+        }
+        currentComment.get().setDescription(comment.getDescription());
+        commentService.save(currentComment.get());
+        return new ResponseEntity<Optional<Comment>>(currentComment, HttpStatus.OK);
     }
 }
 

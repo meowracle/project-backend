@@ -1,9 +1,8 @@
 package com.horizonevent.project.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.horizonevent.project.models.user.User;
+
+import javax.persistence.*;
 
 @Entity
 public class Comment {
@@ -11,6 +10,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String description;
+    @ManyToOne(targetEntity = User.class)
+    private User user;
     public Comment(){
     }
     public Comment(Long id, String description) {
@@ -32,6 +33,14 @@ public class Comment {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
 

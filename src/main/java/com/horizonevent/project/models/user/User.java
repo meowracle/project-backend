@@ -1,6 +1,9 @@
 package com.horizonevent.project.models.user;
 
+import com.horizonevent.project.models.Comment;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -37,6 +40,8 @@ public class User {
 				joinColumns = @JoinColumn(name = "user_id"), 
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
+	@OneToMany(targetEntity = Comment.class)
+	private List<Comment> comments;
 
 	public User() {
 	}
@@ -85,5 +90,13 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 }
