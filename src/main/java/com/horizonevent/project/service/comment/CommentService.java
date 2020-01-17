@@ -1,4 +1,4 @@
-package com.horizonevent.project.service;
+package com.horizonevent.project.service.comment;
 
 import com.horizonevent.project.models.Comment;
 
