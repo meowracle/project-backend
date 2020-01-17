@@ -7,16 +7,27 @@ import javax.persistence.*;
 @Entity
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
     @ManyToOne(targetEntity = User.class)
     private User user;
-    public Comment(){
+    @ManyToOne(targetEntity = Post.class)
+    private Post post;
+
+    public Comment() {
     }
+
     public Comment(Long id, String description) {
         this.id = id;
         this.description = description;
+    }
+
+    public Comment(Long id, String description, User user, Post post) {
+        this.id = id;
+        this.description = description;
+        this.user = user;
+        this.post = post;
     }
 
     public Long getId() {
@@ -41,6 +52,14 @@ public class Comment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 }
 
