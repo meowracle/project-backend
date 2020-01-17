@@ -1,7 +1,7 @@
 package com.horizonevent.project.controllers;
 
 import com.horizonevent.project.models.Post;
-import com.horizonevent.project.security.services.post.PostService;
+import com.horizonevent.project.service.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

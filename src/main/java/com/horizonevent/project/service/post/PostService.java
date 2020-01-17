@@ -1,4 +1,4 @@
-package com.horizonevent.project.security.services.post;
+package com.horizonevent.project.service.post;
 
 import com.horizonevent.project.models.Post;
 

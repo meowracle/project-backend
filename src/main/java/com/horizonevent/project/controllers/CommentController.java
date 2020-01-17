@@ -1,7 +1,7 @@
-package com.horizonevent.project.controllers.comment;
+package com.horizonevent.project.controllers;
 
 import com.horizonevent.project.models.Comment;
-import com.horizonevent.project.service.CommentService;
+import com.horizonevent.project.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

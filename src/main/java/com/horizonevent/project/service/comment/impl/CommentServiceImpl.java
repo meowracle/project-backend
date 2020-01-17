@@ -1,8 +1,8 @@
-package com.horizonevent.project.service.impl;
+package com.horizonevent.project.service.comment.impl;
 
 import com.horizonevent.project.models.Comment;
 import com.horizonevent.project.repository.comment.CommentRepository;
-import com.horizonevent.project.service.CommentService;
+import com.horizonevent.project.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
