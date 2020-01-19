@@ -3,9 +3,11 @@ package com.horizonevent.project.service.picture;
 import com.horizonevent.project.models.Picture;
 import com.horizonevent.project.repository.picture.PictureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class PictureServiceImpl implements PictureService {
     @Autowired
     PictureRepository pictureRepository;
