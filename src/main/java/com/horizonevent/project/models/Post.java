@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -26,21 +27,29 @@ public class Post {
     @Size(min = 6)
     private String content;
 
+    @OneToMany
+    private List<Comment> comments;
+
     @NotNull
     private Date date;
 
     @NotNull
     private Boolean shareStatus;
 
+    @OneToMany
+    private List<Picture> pictures;
+
     public Post() {
     }
 
-    public Post(User user, String title, String content, Date date, Boolean shareStatus) {
+    public Post(User user, String title, String content, List<Comment> comments, Date date, Boolean shareStatus, List<Picture> pictures) {
         this.user = user;
         this.title = title;
         this.content = content;
+        this.comments = comments;
         this.date = date;
         this.shareStatus = shareStatus;
+        this.pictures = pictures;
     }
 
     public Long getId() {
@@ -75,6 +84,14 @@ public class Post {
         this.content = content;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -89,5 +106,13 @@ public class Post {
 
     public void setShareStatus(Boolean shareStatus) {
         this.shareStatus = shareStatus;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        this.pictures = pictures;
     }
 }

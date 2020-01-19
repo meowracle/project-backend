@@ -16,11 +16,13 @@ import java.util.Optional;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
+@RequestMapping("/api")
 public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @RequestMapping(value = "/api/comments", method = RequestMethod.GET)
+    //Receive list comment
+    @RequestMapping(value = "comments", method = RequestMethod.GET)
     public ResponseEntity<List<Comment>> listComments() {
         List<Comment> comments = (List<Comment>) commentService.findAll();
         if (comments.isEmpty()) {
@@ -28,7 +30,9 @@ public class CommentController {
         }
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
     }
-    @RequestMapping(value = "/api/comments", method = RequestMethod.POST)
+
+    //create a new comment
+    @RequestMapping(value = "comments", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> createComment(@RequestBody Comment comment, UriComponentsBuilder uriComponentsBuilder) {
         System.out.println("Creating Comments" + comment.getDescription());
@@ -37,6 +41,8 @@ public class CommentController {
         headers.setLocation(uriComponentsBuilder.path("/comments/{id}").buildAndExpand(comment.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
+
+    //get a single comment
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Comment>> getComments(@PathVariable("id") long id) {
@@ -47,28 +53,33 @@ public class CommentController {
         }
         return new ResponseEntity<Optional<Comment>>(comment, HttpStatus.OK);
     }
-   // @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+
+    //delete a comment
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Comment> deleteComment(@PathVariable("id") long id) {
         System.out.println("Fetching & delete Comments with id" + id);
         Optional<Comment> comment = commentService.findById(id);
         if (comment == null) {
-            System.out.println("Unable to delete Comment with id" + id + "not found");
+            System.out.println("Unable to delete Comment with id " + id + " not found");
             return new ResponseEntity<Comment>(HttpStatus.NOT_FOUND);
         }
         commentService.remove(id);
         return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
     }
 
+    // update comment
     @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Optional<Comment>> updateComment(@PathVariable("id") long id, @RequestBody Comment comment){
-        System.out.println("updating Comment " +id);
+    public ResponseEntity<Optional<Comment>> updateComment(@PathVariable("id") long id, @RequestBody Comment comment) {
+        System.out.println("updating Comment " + id);
         Optional<Comment> currentComment = commentService.findById(id);
-        if( currentComment == null) {
+        if (currentComment == null) {
             System.out.println("Comment with id" + id + "not found");
             return new ResponseEntity<Optional<Comment>>(HttpStatus.NOT_FOUND);
         }
         currentComment.get().setDescription(comment.getDescription());
+        currentComment.get().setUser(comment.getUser());
+        currentComment.get().setPost(comment.getPost());
         commentService.save(currentComment.get());
         return new ResponseEntity<Optional<Comment>>(currentComment, HttpStatus.OK);
     }
