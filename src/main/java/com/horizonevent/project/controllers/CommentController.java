@@ -16,12 +16,13 @@ import java.util.Optional;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
+@RequestMapping("/api")
 public class CommentController {
     @Autowired
     private CommentService commentService;
 
     //Receive list comment
-    @RequestMapping(value = "/api/comments", method = RequestMethod.GET)
+    @RequestMapping(value = "comments", method = RequestMethod.GET)
     public ResponseEntity<List<Comment>> listComments() {
         List<Comment> comments = (List<Comment>) commentService.findAll();
         if (comments.isEmpty()) {
@@ -31,7 +32,7 @@ public class CommentController {
     }
 
     //create a new comment
-    @RequestMapping(value = "/api/comments", method = RequestMethod.POST)
+    @RequestMapping(value = "comments", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> createComment(@RequestBody Comment comment, UriComponentsBuilder uriComponentsBuilder) {
         System.out.println("Creating Comments" + comment.getDescription());
