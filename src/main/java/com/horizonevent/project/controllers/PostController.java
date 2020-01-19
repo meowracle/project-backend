@@ -1,8 +1,12 @@
 package com.horizonevent.project.controllers;
 
+import com.horizonevent.project.models.Picture;
 import com.horizonevent.project.models.Post;
+import com.horizonevent.project.repository.post.PostRepository;
+import com.horizonevent.project.service.picture.PictureService;
 import com.horizonevent.project.service.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -19,6 +24,15 @@ import java.util.List;
 public class PostController {
     @Autowired
     private PostService postService;
+
+    @Autowired
+    Environment environment;
+
+    @Autowired
+    PictureService pictureService;
+
+    @Autowired
+    PostRepository postRepository;
 
     //Receive all posts
     @GetMapping("/posts")
@@ -45,22 +59,38 @@ public class PostController {
     //Create a new post
     @PostMapping("/posts")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Void> createPost(@RequestBody Post post, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Post> createPost(@RequestBody Post post, UriComponentsBuilder ucBuilder) {
+        List<Picture> newPostPictures = new ArrayList<>();
+        if (post.getPictures() != null) {
+            for (Picture picture : post.getPictures()) {
+                pictureService.save(picture);
+                newPostPictures.add(picture);
+            }
+        }
+        post.setPictures(newPostPictures);
         long millis = System.currentTimeMillis();
         java.util.Date date = new java.util.Date(millis);
-        Post post1 = new Post(post.getUser(), post.getTitle(), post.getContent(), post.getComments(), date, post.getShareStatus(), post.getPictures());
-        postService.save(post1);
+        Post currentPost = new Post(post.getUser(), post.getTitle(), post.getContent(), post.getComments(), date, post.getShareStatus(), post.getPictures());
+        postService.save(currentPost);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/posts/{id}").buildAndExpand(post.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<Post>(headers, HttpStatus.CREATED);
     }
 
     //Update Post
     @PutMapping("/posts/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable("id") long id, @RequestBody Post post) {
         Post currentPost = postService.findById(id);
+        List<Picture> newPostPictures = new ArrayList<>();
+        if (post.getPictures() != null) {
+            for (Picture picture : post.getPictures()) {
+                pictureService.save(picture);
+                newPostPictures.add(picture);
+            }
+        }
+        post.setPictures(newPostPictures);
 
-        if(currentPost == null) {
+        if (currentPost == null) {
             System.out.println("Post with id " + id + " not fount");
             return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
         }
