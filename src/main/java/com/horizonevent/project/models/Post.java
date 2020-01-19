@@ -36,16 +36,20 @@ public class Post {
     @NotNull
     private Boolean shareStatus;
 
+    @OneToMany
+    private List<Picture> pictures;
+
     public Post() {
     }
 
-    public Post(User user, String title, String content, List<Comment> comments, Date date, Boolean shareStatus) {
+    public Post(User user, String title, String content, List<Comment> comments, Date date, Boolean shareStatus, List<Picture> pictures) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.comments = comments;
         this.date = date;
         this.shareStatus = shareStatus;
+        this.pictures = pictures;
     }
 
     public Long getId() {
@@ -102,5 +106,13 @@ public class Post {
 
     public void setShareStatus(Boolean shareStatus) {
         this.shareStatus = shareStatus;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        this.pictures = pictures;
     }
 }

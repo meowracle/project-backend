@@ -48,7 +48,7 @@ public class PostController {
     public ResponseEntity<Void> createPost(@RequestBody Post post, UriComponentsBuilder ucBuilder) {
         long millis = System.currentTimeMillis();
         java.util.Date date = new java.util.Date(millis);
-        Post post1 = new Post(post.getUser(), post.getTitle(), post.getContent(), post.getComments(), date, post.getShareStatus());
+        Post post1 = new Post(post.getUser(), post.getTitle(), post.getContent(), post.getComments(), date, post.getShareStatus(), post.getPictures());
         postService.save(post1);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/posts/{id}").buildAndExpand(post.getId()).toUri());
@@ -70,6 +70,7 @@ public class PostController {
         currentPost.setComments(post.getComments());
         currentPost.setDate(post.getDate());
         currentPost.setShareStatus(post.getShareStatus());
+        currentPost.setPictures(post.getPictures());
 
         postService.save(currentPost);
         return new ResponseEntity<Post>(currentPost, HttpStatus.OK);
