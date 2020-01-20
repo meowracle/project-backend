@@ -22,7 +22,7 @@ public class CommentController {
     private CommentService commentService;
 
     //Receive list comment
-    @RequestMapping(value = "comments", method = RequestMethod.GET)
+    @RequestMapping(value = "/comments", method = RequestMethod.GET)
     public ResponseEntity<List<Comment>> listComments() {
         List<Comment> comments = (List<Comment>) commentService.findAll();
         if (comments.isEmpty()) {
@@ -32,8 +32,8 @@ public class CommentController {
     }
 
     //create a new comment
-    @RequestMapping(value = "comments", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @RequestMapping(value = "/comments", method = RequestMethod.POST)
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> createComment(@RequestBody Comment comment, UriComponentsBuilder uriComponentsBuilder) {
         System.out.println("Creating Comments" + comment.getDescription());
         commentService.save(comment);
@@ -43,8 +43,8 @@ public class CommentController {
     }
 
     //get a single comment
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+/*    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")*/
+    @RequestMapping(value = "/comments/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Comment>> getComments(@PathVariable("id") long id) {
         Optional<Comment> comment = commentService.findById(id);
         if (comment == null) {
@@ -55,8 +55,8 @@ public class CommentController {
     }
 
     //delete a comment
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.DELETE)
+/*    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")*/
+    @RequestMapping(value = "/comments/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Comment> deleteComment(@PathVariable("id") long id) {
         System.out.println("Fetching & delete Comments with id" + id);
         Optional<Comment> comment = commentService.findById(id);
@@ -69,7 +69,7 @@ public class CommentController {
     }
 
     // update comment
-    @RequestMapping(value = "/api/comments/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/comments/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Optional<Comment>> updateComment(@PathVariable("id") long id, @RequestBody Comment comment) {
         System.out.println("updating Comment " + id);
         Optional<Comment> currentComment = commentService.findById(id);
