@@ -21,7 +21,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Size(max = 120, min = 6)
+    @Size(min = 1)
     private String title;
 
     @Size(min = 6)

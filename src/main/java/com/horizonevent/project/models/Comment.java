@@ -10,18 +10,17 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String description;
-    @ManyToOne(targetEntity = User.class)
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(targetEntity = Post.class)
+
+    @ManyToOne
     private Post post;
 
     public Comment() {
-    }
-
-    public Comment(Long id, String description) {
-        this.id = id;
-        this.description = description;
     }
 
     public Comment(Long id, String description, User user, Post post) {
