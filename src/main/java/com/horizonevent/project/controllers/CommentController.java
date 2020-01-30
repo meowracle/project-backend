@@ -1,13 +1,14 @@
 package com.horizonevent.project.controllers;
 
 import com.horizonevent.project.models.Comment;
+import com.horizonevent.project.models.user.User;
 import com.horizonevent.project.service.comment.CommentService;
+import com.horizonevent.project.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,6 +19,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class CommentController {
+    @Autowired
+    private UserService userService;
     @Autowired
     private CommentService commentService;
 
@@ -43,7 +46,7 @@ public class CommentController {
     }
 
     //get a single comment
-/*    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")*/
+    /*    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")*/
     @RequestMapping(value = "/comments/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Comment>> getComments(@PathVariable("id") long id) {
         Optional<Comment> comment = commentService.findById(id);
@@ -55,7 +58,7 @@ public class CommentController {
     }
 
     //delete a comment
-/*    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")*/
+    /*    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")*/
     @RequestMapping(value = "/comments/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Comment> deleteComment(@PathVariable("id") long id) {
         System.out.println("Fetching & delete Comments with id" + id);
@@ -82,6 +85,28 @@ public class CommentController {
         currentComment.get().setPost(comment.getPost());
         commentService.save(currentComment.get());
         return new ResponseEntity<Optional<Comment>>(currentComment, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") long id) {
+        Optional<User> user = userService.findById(id);
+        if (user == null) {
+            System.out.println("User " + id + " not found");
+            return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Optional<User>> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+        System.out.println("updating User " + id);
+        Optional<User> currentUser = userService.findById(id);
+        if (currentUser == null) {
+            System.out.println("User with id" + id + "not found");
+            return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
+        }
+        currentUser.get().setPassword(user.getPassword());
+        userService.save(currentUser.get());
+        return new ResponseEntity<Optional<User>>(currentUser, HttpStatus.OK);
     }
 }
 
