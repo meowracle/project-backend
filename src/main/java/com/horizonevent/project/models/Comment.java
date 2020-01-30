@@ -3,6 +3,7 @@ package com.horizonevent.project.models;
 import com.horizonevent.project.models.user.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Comment {
