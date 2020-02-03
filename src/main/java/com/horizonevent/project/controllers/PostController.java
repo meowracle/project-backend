@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -37,7 +38,7 @@ public class PostController {
     //Receive all posts
     @GetMapping("/posts")
     public ResponseEntity<List<Post>> listAllPosts() {
-        List<Post> posts = postService.findAll();
+        List<Post> posts = (List<Post>) postService.findAll();
         if (posts.isEmpty()) {
             return new ResponseEntity<List<Post>>(HttpStatus.NO_CONTENT);
         }
@@ -46,20 +47,20 @@ public class PostController {
 
     //Receive a single post
     @GetMapping(value = "/posts/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Post> getPost(@PathVariable("id") long id) {
-        Post post = postService.findById(id);
+    public ResponseEntity<Optional<Post>> getPost(@PathVariable("id") long id) {
+        Optional<Post> post = postService.findById(id);
         if (post == null) {
             System.out.println("Post with id " + id + " not found");
-            return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Optional<Post>>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Post>(post, HttpStatus.OK);
+        return new ResponseEntity<Optional<Post>>(post, HttpStatus.OK);
     }
 
 
     //Create a new post
     @PostMapping("/posts")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<Post> createPost(@RequestBody Post post, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Void> createPost(@RequestBody Post post, UriComponentsBuilder ucBuilder) {
         List<Picture> newPostPictures = new ArrayList<>();
         if (post.getPictures() != null) {
             for (Picture picture : post.getPictures()) {
@@ -74,13 +75,13 @@ public class PostController {
         postService.save(currentPost);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/posts/{id}").buildAndExpand(post.getId()).toUri());
-        return new ResponseEntity<Post>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
     //Update Post
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable("id") long id, @RequestBody Post post) {
-        Post currentPost = postService.findById(id);
+    public ResponseEntity<Optional<Post>> updatePost(@PathVariable("id") long id, @RequestBody Post post) {
+        Optional<Post> currentPost = postService.findById(id);
         List<Picture> newPostPictures = new ArrayList<>();
         if (post.getPictures() != null) {
             for (Picture picture : post.getPictures()) {
@@ -92,24 +93,24 @@ public class PostController {
 
         if (currentPost == null) {
             System.out.println("Post with id " + id + " not fount");
-            return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Optional<Post>>(HttpStatus.NOT_FOUND);
         }
 
-        currentPost.setTitle(post.getTitle());
-        currentPost.setContent(post.getContent());
-        currentPost.setComments(post.getComments());
-        currentPost.setDate(post.getDate());
-        currentPost.setShareStatus(post.getShareStatus());
-        currentPost.setPictures(post.getPictures());
+        currentPost.get().setTitle(post.getTitle());
+        currentPost.get().setContent(post.getContent());
+        currentPost.get().setComments(post.getComments());
+        currentPost.get().setDate(post.getDate());
+        currentPost.get().setShareStatus(post.getShareStatus());
+        currentPost.get().setPictures(post.getPictures());
 
-        postService.save(currentPost);
-        return new ResponseEntity<Post>(currentPost, HttpStatus.OK);
+        postService.save(currentPost.get());
+        return new ResponseEntity<Optional<Post>>(currentPost, HttpStatus.OK);
     }
 
     //Delete a Post
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable("id") long id) {
-        Post post = postService.findById(id);
+        Optional<Post> post = postService.findById(id);
         if (post == null) {
             System.out.println("Unable to delete. Post id " + id + " not fount");
             return new ResponseEntity<Post>(HttpStatus.NOT_FOUND);
