@@ -7,11 +7,14 @@ import com.horizonevent.project.service.picture.PictureService;
 import com.horizonevent.project.service.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,12 +40,16 @@ public class PostController {
 
     //Receive all posts
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> listAllPosts() {
-        List<Post> posts = (List<Post>) postService.findAll();
+    public ResponseEntity<Page<Post>> listAllPosts(@RequestParam("s") Optional<String> s, Pageable pageable) {
+        Page<Post> posts = (Page<Post>) postService.findAll();
         if (posts.isEmpty()) {
-            return new ResponseEntity<List<Post>>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<Page<Post>>(HttpStatus.NO_CONTENT);
+        } else if (s.isPresent()) {
+            posts = postService.findAllByTitleContaining(s.get(), pageable);
+            return new ResponseEntity<Page<Post>>(posts, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Page<Post>>(posts, HttpStatus.OK);
         }
-        return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
     //Receive a single post
