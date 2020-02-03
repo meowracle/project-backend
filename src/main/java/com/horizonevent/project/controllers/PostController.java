@@ -40,16 +40,12 @@ public class PostController {
 
     //Receive all posts
     @GetMapping("/posts")
-    public ResponseEntity<Page<Post>> listAllPosts(@RequestParam("s") Optional<String> s, Pageable pageable) {
-        Page<Post> posts = (Page<Post>) postService.findAll();
-        if (posts.isEmpty()) {
-            return new ResponseEntity<Page<Post>>(HttpStatus.NO_CONTENT);
-        } else if (s.isPresent()) {
-            posts = postService.findAllByTitleContaining(s.get(), pageable);
-            return new ResponseEntity<Page<Post>>(posts, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Page<Post>>(posts, HttpStatus.OK);
+    public ResponseEntity<List<Post>> listAllPosts() {
+        List<Post> posts = (List<Post>) postService.findAll();
+        if (posts.isEmpty()){
+            return new ResponseEntity<List<Post>>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
     //Receive a single post
