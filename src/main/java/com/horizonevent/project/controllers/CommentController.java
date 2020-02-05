@@ -34,6 +34,16 @@ public class CommentController {
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/comments/posts/{id}", method = RequestMethod.GET)
+    public ResponseEntity<List<Comment>> listCommentsByPostId(@PathVariable long id) {
+        List<Comment> comments = (List<Comment>) commentService.findAllByPostId(id);
+        if (comments.isEmpty()) {
+            return new ResponseEntity<List<Comment>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
+    }
+
+
     //create a new comment
     @RequestMapping(value = "/comments", method = RequestMethod.POST)
 //    @PreAuthorize("hasRole('ROLE_USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
