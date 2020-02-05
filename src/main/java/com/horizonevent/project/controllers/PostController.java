@@ -122,5 +122,4 @@ public class PostController {
         postService.remove(id);
         return new ResponseEntity<Post>(HttpStatus.NO_CONTENT);
     }
-
 }
