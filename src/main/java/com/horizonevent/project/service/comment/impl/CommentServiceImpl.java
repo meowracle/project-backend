@@ -6,6 +6,7 @@ import com.horizonevent.project.service.comment.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -31,6 +32,11 @@ public class CommentServiceImpl implements CommentService {
     public void remove(Long id) {
         commentRepository.deleteById(id);
 
+    }
+
+    @Override
+    public List<Comment> findAllByPostId(Long postId) {
+        return commentRepository.findAllByPostId(postId);
     }
 }
 
