@@ -1,9 +1,11 @@
-package com.horizonevent.project.service.comment.impl;
+package com.horizonevent.project.service.post.impl;
 
 import com.horizonevent.project.models.Post;
 import com.horizonevent.project.repository.post.PostRepository;
 import com.horizonevent.project.service.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +37,10 @@ public class PostServiceImpl implements PostService {
     public void remove(Long id) {
         postRepository.deleteById(id);
 
+    }
+
+    @Override
+    public Page<Post> findAllByTitleContaining(String tittle, Pageable pageable) {
+        return postRepository.findAllByTitleContaining(tittle, pageable);
     }
 }

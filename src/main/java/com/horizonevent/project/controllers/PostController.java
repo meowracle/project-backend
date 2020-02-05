@@ -7,11 +7,14 @@ import com.horizonevent.project.service.picture.PictureService;
 import com.horizonevent.project.service.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,7 +42,7 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<List<Post>> listAllPosts() {
         List<Post> posts = (List<Post>) postService.findAll();
-        if (posts.isEmpty()) {
+        if (posts.isEmpty()){
             return new ResponseEntity<List<Post>>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
@@ -119,5 +122,4 @@ public class PostController {
         postService.remove(id);
         return new ResponseEntity<Post>(HttpStatus.NO_CONTENT);
     }
-
 }
