@@ -40,7 +40,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> findAllByTitleContaining(String tittle, Pageable pageable) {
-        return postRepository.findAllByTitleContaining(tittle, pageable);
+    public List<Post> findAllByTitleContaining(String tittle) {
+        return postRepository.findAllByTitleContaining(tittle);
     }
+
 }
