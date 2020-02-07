@@ -31,12 +31,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void remove(Long id) {
         commentRepository.deleteById(id);
-
     }
 
     @Override
     public List<Comment> findAllByPostId(Long postId) {
         return commentRepository.findAllByPostId(postId);
+    }
+
+    @Override
+    public void removeAllCommentByPostID(Long postId) {
+        commentRepository.deleteAllByPostId(postId);
     }
 }
 
