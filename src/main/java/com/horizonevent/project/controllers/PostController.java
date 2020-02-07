@@ -74,7 +74,7 @@ public class PostController {
         post.setPictures(newPostPictures);
         long millis = System.currentTimeMillis();
         java.util.Date date = new java.util.Date(millis);
-        Post currentPost = new Post(post.getUser(), post.getTitle(), post.getContent(), post.getComments(), date, post.getShareStatus(), post.getPictures());
+        Post currentPost = new Post(post.getUser(), post.getTitle(), post.getContent(), post.getComments(), date, post.getShareStatus(), post.getPictures(), post.getVideo());
         postService.save(currentPost);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/posts/{id}").buildAndExpand(post.getId()).toUri());
@@ -105,6 +105,7 @@ public class PostController {
         currentPost.get().setDate(post.getDate());
         currentPost.get().setShareStatus(post.getShareStatus());
         currentPost.get().setPictures(post.getPictures());
+        currentPost.get().setVideo(post.getVideo());
 
         postService.save(currentPost.get());
         return new ResponseEntity<Optional<Post>>(currentPost, HttpStatus.OK);
