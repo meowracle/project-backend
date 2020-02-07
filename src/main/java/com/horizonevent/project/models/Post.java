@@ -35,14 +35,14 @@ public class Post {
 
     @NotNull
     private Boolean shareStatus;
+    private String video;
 
     @OneToMany
     private List<Picture> pictures;
 
     public Post() {
     }
-
-    public Post(User user, String title, String content, List<Comment> comments, Date date, Boolean shareStatus, List<Picture> pictures) {
+    public Post(User user, String title, String content, List<Comment> comments, Date date, Boolean shareStatus, List<Picture> pictures, String video) {
         this.user = user;
         this.title = title;
         this.content = content;
@@ -50,6 +50,7 @@ public class Post {
         this.date = date;
         this.shareStatus = shareStatus;
         this.pictures = pictures;
+        this.video = video;
     }
 
     public Long getId() {
@@ -114,5 +115,13 @@ public class Post {
 
     public void setPictures(List<Picture> pictures) {
         this.pictures = pictures;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
     }
 }
