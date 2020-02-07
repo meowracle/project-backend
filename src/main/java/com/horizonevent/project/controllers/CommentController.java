@@ -81,6 +81,16 @@ public class CommentController {
         return new ResponseEntity<Comment>(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping(value = "/comments/posts/{id}")
+    public ResponseEntity<List<Comment>> deleteAllCommentByPostId (@PathVariable("id") long id) {
+        List<Comment> comments = (List<Comment>) commentService.findAllByPostId(id);
+        if (comments.isEmpty()) {
+            return new ResponseEntity<List<Comment>>(HttpStatus.NOT_FOUND);
+        }
+        commentService.removeAllCommentByPostID(id);
+        return new ResponseEntity<List<Comment>>(HttpStatus.NO_CONTENT);
+    }
+
     // update comment
     @RequestMapping(value = "/comments/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Optional<Comment>> updateComment(@PathVariable("id") long id, @RequestBody Comment comment) {
