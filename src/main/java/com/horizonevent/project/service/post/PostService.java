@@ -12,5 +12,5 @@ public interface PostService {
     Optional<Post> findById(Long id);
     void save(Post post);
     void remove(Long id);
-    Page<Post> findAllByTitleContaining(String tittle, Pageable pageable);
+    List<Post> findAllByTitleContaining(String tittle);
 }
