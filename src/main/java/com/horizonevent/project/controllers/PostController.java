@@ -122,4 +122,14 @@ public class PostController {
         postService.remove(id);
         return new ResponseEntity<Post>(HttpStatus.NO_CONTENT);
     }
+    //search
+    @PostMapping("/posts-search")
+  //  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<List<Post>> searchPost( @RequestBody String tittle){
+        List<Post> posts = postService.findAllByTitleContaining(tittle);
+        if (!tittle.isEmpty()){
+            return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
+        }
+        return new ResponseEntity<List<Post>>(HttpStatus.NOT_FOUND);
+    }
 }
