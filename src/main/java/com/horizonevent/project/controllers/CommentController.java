@@ -106,28 +106,6 @@ public class CommentController {
         commentService.save(currentComment.get());
         return new ResponseEntity<Optional<Comment>>(currentComment, HttpStatus.OK);
     }
-
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") long id) {
-        Optional<User> user = userService.findById(id);
-        if (user == null) {
-            System.out.println("User " + id + " not found");
-            return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
-    }
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Optional<User>> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-        System.out.println("updating User " + id);
-        Optional<User> currentUser = userService.findById(id);
-        if (currentUser == null) {
-            System.out.println("User with id" + id + "not found");
-            return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
-        }
-        currentUser.get().setPassword(user.getPassword());
-        userService.save(currentUser.get());
-        return new ResponseEntity<Optional<User>>(currentUser, HttpStatus.OK);
-    }
 }
 
   
