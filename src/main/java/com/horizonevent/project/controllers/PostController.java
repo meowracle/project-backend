@@ -48,6 +48,15 @@ public class PostController {
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/posts/user/{id}")
+    public ResponseEntity<List<Post>> listPostByUser(@PathVariable("id") long userId) {
+        List<Post> posts = (List<Post>) postService.findAllByUser_Id(userId);
+        if (posts.isEmpty()) {
+            return new ResponseEntity<List<Post>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
+    }
+
     //Receive a single post
     @GetMapping(value = "/posts/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Post>> getPost(@PathVariable("id") long id) {

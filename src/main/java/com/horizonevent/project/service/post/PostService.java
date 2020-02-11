@@ -13,4 +13,5 @@ public interface PostService {
     void save(Post post);
     void remove(Long id);
     List<Post> findAllByTitleContaining(String tittle);
+    Iterable<Post> findAllByUser_Id(Long id);
 }

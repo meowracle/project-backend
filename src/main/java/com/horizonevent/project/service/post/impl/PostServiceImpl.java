@@ -19,7 +19,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Iterable<Post> findAll() {
-        return postRepository.findAll();
+        return postRepository.findAllByShareStatusIsTrue();
     }
 
     @Override
@@ -42,6 +42,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> findAllByTitleContaining(String tittle) {
         return postRepository.findAllByTitleContaining(tittle);
+    }
+
+    @Override
+    public Iterable<Post> findAllByUser_Id(Long id) {
+        return postRepository.findAllByUser_Id(id);
     }
 
 }
