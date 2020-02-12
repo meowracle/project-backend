@@ -12,5 +12,6 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Long > {
     List<Post> findAllByTitleContaining(String tittle);
-
+    List<Post> findAllByShareStatusIsTrue();
+    List<Post> findAllByUser_Id(Long user_id);
 }
